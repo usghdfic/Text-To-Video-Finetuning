@@ -1,3 +1,4 @@
+# @title Default title text
 # MIT License
 
 # Copyright (c) 2023 Hans Brouwer
@@ -363,6 +364,8 @@ if __name__ == "__main__":
     parser.add_argument("-rw", "--remove-watermark", action="store_true", help="Post-process the videos with LAMA to inpaint ModelScope's common watermarks.")
     parser.add_argument("-l", "--loop", action="store_true", help="Make the video loop (by rotating frame order during diffusion).")
     parser.add_argument("-r", "--seed", type=int, default=None, help="Random seed to make generations reproducible.")
+    parser.add_argument("-u", "--userid", type=int, default=None, help="Random seed to make generations reproducible.")
+
     args = parser.parse_args()
     # fmt: on
 
@@ -372,7 +375,7 @@ if __name__ == "__main__":
 
     out_name = f"{args.output_dir}/"
     if args.init_video is not None:
-        out_name += f"[({Path(args.init_video).stem}) x {args.init_weight}] "
+        out_name = out_name
     prompt = re.sub(r'[<>:"/\\|?*\x00-\x1F]', "_", args.prompt) if platform.system() == "Windows" else args.prompt
     out_name += f"{prompt}"
 
@@ -432,4 +435,4 @@ if __name__ == "__main__":
 
         video = video.byte().cpu().numpy()
 
-        export_to_video(video, f"{out_name} {str(uuid4())[:8]}.mp4", args.fps)
+        export_to_video(video, f"{out_name}{args.userid}.mp4", args.fps)
